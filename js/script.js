@@ -118,43 +118,6 @@
     });
   });
 
-  var video = document.getElementById('project-video');
-  var zoomVideoBtn = document.querySelector('[data-zoom-video]');
-  var vWrap = document.querySelector('.video-wrap');
-  var vFailed = false;
-  function showVideoError() {
-    if (vFailed || !vWrap) return;
-    vFailed = true;
-    vWrap.classList.add('is-broken');
-    var note = document.createElement('p');
-    note.textContent = 'This video is unavailable right now. Please check back soon.';
-    vWrap.appendChild(note);
-    console.warn('Video failed to load. Put an MP4 (H.264 + AAC) at assets/web1video1.mp4');
-  }
-  if (video && zoomVideoBtn) {
-    var srcEl = video.querySelector('source');
-    srcEl.addEventListener('error', showVideoError);
-    video.addEventListener('error', showVideoError);
-    zoomVideoBtn.addEventListener('click', function () {
-      var big = document.createElement('video');
-      big.controls = true; big.playsInline = true; big.autoplay = true; big.preload = 'auto';
-      big.src = srcEl.src.split('#')[0];
-      big.addEventListener('error', function () { closeBox(); showVideoError(); });
-      big.addEventListener('loadedmetadata', function () {
-        if (!big.videoWidth) {
-          big.pause();
-          var msg = document.createElement('p');
-          msg.className = 'lightbox-msg';
-          msg.textContent = 'This video format is not supported by your browser. It needs to be re-exported as H.264 (MP4).';
-          boxBody.replaceChildren(msg);
-          console.warn('web1video1.mp4 has no decodable video track (likely H.265/HEVC or 10-bit). Re-encode to H.264 yuv420p.');
-        }
-      });
-      openBox(big);
-      var p = big.play(); if (p && p.catch) p.catch(function () {});
-    });
-  }
-
   box.addEventListener('click', function (e) {
     if (e.target === box || e.target === boxBody) closeBox();
   });
